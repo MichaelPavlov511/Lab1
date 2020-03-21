@@ -8,18 +8,16 @@ int testFloatSum(){
     Matrix ans = createMatrix(2, 2);
     int i, j;
     for (i = 0; i < 2; ++i){
-        for (j = 0; j < 2; ++j) Mr(a, i, j) = 4.46*i - 3*j;
+        for (j = 0; j < 2; ++j) {
+            Mr(b, i, j) = 1.03*i + j;   
+            Mr(a, i, j) = 4.46*i - 3*j;
+            Mr(ans, i, j) = 5.49*i - 2*j;
+        }
     }
     puts ("1st matrix: \n");
     printMatrix(&a);
-    for (i = 0; i < 2; ++i){
-        for (j = 0; j < 2; ++j) Mr(b, i, j) = 1.03*i + j;
-    }
     puts ("2nd matrix: \n");
     printMatrix(&b);
-    for (i = 0; i < 2; ++i){
-        for (j = 0; j < 2; ++j) Mr(ans, i, j) = 5.49*i - 2*j;
-    }
     puts ("Sum of matrices: \n");
     Matrix r = add(&a, &b);
     printMatrix(&r);
@@ -40,24 +38,16 @@ int testComplexSum(){
         for (j = 0; j < 2; ++j){
             Mrc(a, i, j).re = 4.46*i - 3*j;
             Mrc(a, i, j).im = 0.11*i + j*j;
-        }
-    }
-    puts ("1st matrix: \n");
-    printMatrixc(&a);
-    for (i = 0; i < 2; ++i){
-        for (j = 0; j < 2; ++j){
             Mrc(b, i, j).re = i*1.00;
             Mrc(b, i, j).im = 2*j-1;
-        }
-    }
-    puts ("2nd matrix: \n");
-    printMatrixc(&b);
-    for (i = 0; i < 2; ++i){
-        for (j = 0; j < 2; ++j){
             Mrc(ans, i, j).re = 5.46*i - 3*j;
             Mrc(ans, i, j).im = 0.11*i + j*j + 2*j - 1;
         }
     }
+    puts ("1st matrix: \n");
+    printMatrixc(&a);
+    puts ("2nd matrix: \n");
+    printMatrixc(&b);
     puts ("Sum of matrices: \n");
     Matrixc r = addc(&a, &b);
     printMatrixc(&r);
