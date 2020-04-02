@@ -91,8 +91,6 @@ int main(){
 
             puts ("Transposed matrix:\n");
             printMatrixc(&resultc3);
-
-            destroyMatrixc(&resultc3);
         }
         puts ("\n");
 
