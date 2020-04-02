@@ -56,8 +56,6 @@ int main(){
 
             puts ("Transposed matrix:\n");
             printMatrix(&result3);
-
-            destroyMatrix(&result3);
         }
 
         if(lapre == 1 && que == 2){
