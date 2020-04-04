@@ -4,7 +4,6 @@
 
 #ifndef NEWLAB1NEW_HEADER_H
 #define NEWLAB1NEW_HEADER_H
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -51,16 +50,11 @@ complex multc (complex *a, complex *b)
     return (ans);
 }
 
-typedef struct Matrixc {
-    int     rowSize;
-    int     columnSize;
-    complex** matrix;
-} Matrixc;
-
 typedef struct Matrix {
     int     rowSize;
     int     columnSize;
-    float**    matrix;
+    void**    matrix;
+    int     flag;           // 1 for real and 2 for complex
 } Matrix;
 
 
@@ -69,66 +63,24 @@ void err(){
     exit(0);
 }
 
-Matrix createMatrix(int r, int c){
-    Matrix temp = {r, c, calloc(r, sizeof(float *))};
-
+Matrix createMatrix(int r, int c, int f){
+    int vtf;
+    if (f == 1) vtf = sizeof(float);
+    else vtf = sizeof(complex);
+    Matrix temp = {r, c, calloc(r, sizeof(void*))};
+    temp.flag = f;
     if (temp.matrix == NULL) {
         err();
     }
 
     for (int i = 0; i < r; i++) {
-        temp.matrix[i] = calloc(c, sizeof temp.matrix[i][0]);
+        temp.matrix[i] = calloc(c, sizeof vtf);
 
         if (temp.matrix[i] == NULL) {
             err();
         }
     }
     return temp;
-}
-
-Matrixc createMatrixc(int r, int c){
-    Matrixc temp = {r, c, calloc(r, sizeof(complex *))};
-
-    if (temp.matrix == NULL) {
-        err();
-    }
-
-    for (int i = 0; i < r; i++) {
-        temp.matrix[i] = calloc(c, sizeof temp.matrix[i][0]);
-
-        if (temp.matrix[i] == NULL) {
-            err();
-        }
-    }
-    return temp;
-}
-
-Matrix Assignment(Matrix *m){
-    int i, j;
-    int r = m->rowSize;
-    int c = m->columnSize;
-    Matrix result = createMatrix(r,c);
-    for (i = 0; i < r; ++i){
-        for (j = 0; j < c; ++j){
-            printf ( "Enter the element of line %d column %d: \n", i+1, j+1);
-            scanf("%f", &Mr(result, i, j));
-        }
-    }
-    return result;
-}
-
-Matrixc Assignmentc(Matrixc *m){
-    int i, j;
-    int r = m->rowSize;
-    int c = m->columnSize;
-    Matrixc result = createMatrixc(r,c);
-    for (i = 0; i < r; ++i){
-        for (j = 0; j < c; ++j){
-            printf ( "Enter the element of line %d column %d: \n", i+1, j+1);
-            Mrc(result, i, j) = assc();
-        }
-    }
-    return result;
 }
 
 void printMatrix(Matrix *m){
@@ -136,48 +88,43 @@ void printMatrix(Matrix *m){
     int i,j;
     for(i = 0; i < m->rowSize ; i++){
         for(j = 0; j < m->columnSize; j++){
-            printf("%.2f\t", M(m, i, j));
+            if (m->flag == 1) printf("%.2f\t", M(m, i, j));
+            else printfc(&Mc(m, i, j));
         }
         printf("\n");
     }
 }
 
-void printMatrixc(Matrixc *m){
-
-    int i,j;
-    for(i = 0; i < m->rowSize ; i++){
-        for(j = 0; j < m->columnSize; j++){
-            printfc(&Mc(m, i, j));
+Matrix Assignment(Matrix *m){
+    int i, j;
+    float f;
+    complex com;
+    int r = m->rowSize;
+    int c = m->columnSize;
+    int que = m->flag;
+    Matrix result = createMatrix(r,c, que);
+    for (i = 0; i < r; ++i){
+        for (j = 0; j < c; ++j){
+            printf ( "Enter the element of line %d column %d: \n", i+1, j+1);
+            if (m->flag == 1) scanf("%f", &Mr(result, i, j));
+            else Mrc(result, i, j) = assc();
         }
-        printf("\n");
     }
+    puts ("Your Matrix: \n");
+    return result;
 }
 
 Matrix add(Matrix *a, Matrix *b){
     if(a->rowSize != b->rowSize || a->columnSize != b->columnSize) err();
     int r = a->rowSize;
     int c = a->columnSize;
-    Matrix result = createMatrix(r,c);
+    int que = a->flag;
+    Matrix result = createMatrix(r,c, que);
     int i,j;
     for(i = 0; i < r ; i++){
         for(j = 0; j < c; j++){
-            Mr(result, i, j) = M(a, i, j) + M(b, i, j);
-            //printf ("%d \t", Mr(result, i, j));
-        }
-    }
-    return result;
-}
-
-Matrixc addc(Matrixc *a, Matrixc *b){
-    if(a->rowSize != b->rowSize || a->columnSize != b->columnSize) err();
-    int r = a->rowSize;
-    int c = a->columnSize;
-    Matrixc result = createMatrixc(r,c);
-    int i,j;
-    for(i = 0; i < r ; i++){
-        for(j = 0; j < c; j++){
-            //Mrc(result, i, j) = Mc(a, i, j) + Mc(b, i, j);
-            Mrc(result, i, j) = sumc(&Mc(a, i, j), &Mc(b, i, j));
+            if (que == 1) Mr(result, i, j) = M(a, i, j) + M(b, i, j);
+            else Mrc(result, i, j) = sumc(&Mc(a, i, j), &Mc(b, i, j));
             //printf ("%d \t", Mr(result, i, j));
         }
     }
@@ -188,44 +135,27 @@ Matrix multiply(Matrix *a, Matrix *b){
     if(a->columnSize != b->rowSize ) err();
     int r = a->rowSize;
     int c = b->columnSize;
-    Matrix result = createMatrix(r, c);
+    int que = a->flag;
+    Matrix result = createMatrix(r, c, que);
 
     int i,j;
     for(i = 0; i < r ; i++){
         for(j = 0; j < c; j++){
             float sum = 0;
+            complex suc, succ;
+            succ.re = 0; succ.im = 0;
             int k;
             for(k = 0; k < a->columnSize; k++){
-                sum = sum + M(a, i, k) * M(b, k, j);
+                if (a->flag == 1) {
+                    sum = sum + M(a, i, k) * M(b, k, j);
+                }
+                else {
+                    suc = multc(&Mc(a, i, k), &Mc(b, k, j));
+                    succ = sumc(&succ, &suc);
+                }
             }
-            Mr(result, i, j) = sum;
-        }
-    }
-    return result;
-}
-
-Matrixc multiplyc(Matrixc *a, Matrixc *b){
-    if(a->columnSize != b->rowSize ) err();
-
-    int r = a->rowSize;
-    int c = b->columnSize;
-    Matrixc result = createMatrixc(r, c);
-
-    int i,j;
-    complex mlt;
-    for(i = 0; i < r ; i++){
-        for(j = 0; j < c; j++){
-            complex sum;
-            sum.re = 0;
-            sum.im = 0;
-            int k;
-            for(k = 0; k < a->columnSize; k++){
-                mlt.re = 0;
-                mlt.im = 0;
-                mlt = multc(&Mc(a, i, k), &Mc(b, k, j));
-                sum = sumc(&sum, &mlt);
-            }
-            Mrc(result, i, j) = sum;
+            if (a->flag == 1) Mr(result, i, j) = sum;
+            else Mrc(result, i, j) = succ;
         }
     }
     return result;
@@ -234,30 +164,19 @@ Matrixc multiplyc(Matrixc *a, Matrixc *b){
 Matrix trans(Matrix *a){
     int r = a->columnSize;
     int c = a->rowSize;
-    Matrix result = createMatrix(r, c);
+    int que = a->flag;
+    Matrix result = createMatrix(r, c, que);
 
     int i, j;
     for(i = 0; i < r; i++){
         for(j = 0; j < c; j++){
-            Mr(result, i, j) = M(a, j, i);
+            if (a->flag == 1) Mr(result, i, j) = M(a, j, i);
+            else Mrc(result, i, j) = Mc(a, j, i);
         }
     }
     return result;
 }
 
-Matrixc transc(Matrixc *a){
-    int r = a->columnSize;
-    int c = a->rowSize;
-    Matrixc result = createMatrixc(r, c);
-
-    int i, j;
-    for(i = 0; i < r; i++){
-        for(j = 0; j < c; j++){
-            Mrc(result, i, j) = Mc(a, j, i);
-        }
-    }
-    return result;
-}
 
 void destroyMatrix(Matrix* matrix){
     if(matrix->rowSize * matrix->columnSize == 0) return;
@@ -265,14 +184,7 @@ void destroyMatrix(Matrix* matrix){
     free(matrix->matrix);
     matrix->rowSize = 0;
     matrix->columnSize = 0;
-}
-
-void destroyMatrixc(Matrixc* matrix){
-    if(matrix->rowSize * matrix->columnSize == 0) return;
-    for(int i = 0; i < matrix->rowSize * matrix->columnSize; i++) free(matrix->matrix[i]);
-    free(matrix->matrix);
-    matrix->rowSize = 0;
-    matrix->columnSize = 0;
+    matrix->flag = 0;
 }
 
 #endif //NEWLAB1NEW_HEADER_H
