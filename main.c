@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "header2.h"
+#include "header.h"
 
 int main(){
     int r, c, que, lapre = 1;
