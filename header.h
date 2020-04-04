@@ -2,8 +2,8 @@
 // Created by Michael Pavlov on 11.03.2020.
 //
 
-#ifndef NEWLAB1NEW_HEADER_H
-#define NEWLAB1NEW_HEADER_H
+#ifndef Lab1_HEADER_H
+#define Lab1_HEADER_H
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -187,4 +187,4 @@ void destroyMatrix(Matrix* matrix){
     matrix->flag = 0;
 }
 
-#endif //NEWLAB1NEW_HEADER_H
+#endif //Lab1_HEADER_H
