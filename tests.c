@@ -1,15 +1,15 @@
 #include "stdio.h"
-#include "header.h"
+#include "header2.h"
 
 
 int testFloatSum(){
-    Matrix a = createMatrix(2,2);
-    Matrix b = createMatrix(2, 2);
-    Matrix ans = createMatrix(2, 2);
+    Matrix a = createMatrix(2,2, 1);
+    Matrix b = createMatrix(2, 2, 1);
+    Matrix ans = createMatrix(2, 2, 1);
     int i, j;
     for (i = 0; i < 2; ++i){
         for (j = 0; j < 2; ++j) {
-            Mr(b, i, j) = 1.03*i + j;   
+            Mr(b, i, j) = 1.03*i + j;
             Mr(a, i, j) = 4.46*i - 3*j;
             Mr(ans, i, j) = 5.49*i - 2*j;
         }
@@ -30,9 +30,9 @@ int testFloatSum(){
 }
 
 int testComplexSum(){
-    Matrixc a = createMatrixc(2,2);
-    Matrixc b = createMatrixc(2, 2);
-    Matrixc ans = createMatrixc(2, 2);
+    Matrix a = createMatrix(2,2, 2);
+    Matrix b = createMatrix(2, 2, 2);
+    Matrix ans = createMatrix(2, 2, 2);
     int i, j;
     for (i = 0; i < 2; ++i){
         for (j = 0; j < 2; ++j){
@@ -45,12 +45,12 @@ int testComplexSum(){
         }
     }
     puts ("1st matrix: \n");
-    printMatrixc(&a);
+    printMatrix(&a);
     puts ("2nd matrix: \n");
-    printMatrixc(&b);
+    printMatrix(&b);
     puts ("Sum of matrices: \n");
-    Matrixc r = addc(&a, &b);
-    printMatrixc(&r);
+    Matrix r = add(&a, &b);
+    printMatrix(&r);
     for (i=0; i<2; i++){
         for (j=0; j<2; j++){
             if (Mrc(ans, i, j).re != Mrc(r, i, j).re && Mrc(ans, i, j).im != Mrc(r, i, j).im) return 0;
@@ -60,8 +60,8 @@ int testComplexSum(){
 }
 
 int testFloatTrans(){
-    Matrix a = createMatrix(3,2);
-    Matrix ans = createMatrix(2, 3);
+    Matrix a = createMatrix(3,2, 1);
+    Matrix ans = createMatrix(2, 3, 1);
     int i, j;
     for (i = 0; i < 3; ++i){
         for (j = 0; j < 2; ++j) Mr(a, i, j) = i*2.00-3;
@@ -83,8 +83,8 @@ int testFloatTrans(){
 }
 
 int testComplexTrans(){
-    Matrixc a = createMatrixc(2,3);
-    Matrixc ans = createMatrixc(3, 2);
+    Matrix a = createMatrix(2,3, 2);
+    Matrix ans = createMatrix(3, 2, 2);
     int i, j;
     for (i = 0; i < 2; ++i){
         for (j = 0; j < 3; ++j){
@@ -93,7 +93,7 @@ int testComplexTrans(){
         }
     }
     puts ("Your matrix: \n");
-    printMatrixc(&a);
+    printMatrix(&a);
     for (i = 0; i < 3; ++i){
         for (j = 0; j < 2; ++j){
             Mrc(ans, i, j).im = i*3.00-1;
@@ -101,8 +101,8 @@ int testComplexTrans(){
         }
     }
     puts ("Transposed matrix: \n");
-    Matrixc r = transc(&a);
-    printMatrixc(&r);
+    Matrix r = trans(&a);
+    printMatrix(&r);
     for (i=0; i<3; i++){
         for (j=0; j<2; j++){
             if (Mrc(ans, i, j).re != Mrc(r, i, j).re || Mrc(ans, i, j).im != Mrc(r, i, j).im) return 0;
@@ -112,9 +112,9 @@ int testComplexTrans(){
 }
 
 int testFloatMult(){
-    Matrix a = createMatrix(2,2);
-    Matrix b = createMatrix(2, 2);
-    Matrix ans = createMatrix(2, 2);
+    Matrix a = createMatrix(2,2, 1);
+    Matrix b = createMatrix(2, 2, 1);
+    Matrix ans = createMatrix(2, 2, 1);
     int i, j;
     for (i = 0; i < 2; ++i){
         for (j = 0; j < 2; ++j) {
@@ -139,30 +139,30 @@ int testFloatMult(){
 }
 
 int testComplexMult(){
-    Matrixc a = createMatrixc(2,2);
-    Matrixc b = createMatrixc(2, 2);
-    Matrixc ans = createMatrixc(2, 2);
+    Matrix a = createMatrix(2,2, 2);
+    Matrix b = createMatrix(2, 2, 2);
+    Matrix ans = createMatrix(2, 2, 2);
     int i, j;
     for (i = 0; i < 2; ++i){
         for (j = 0; j < 2; ++j) {
             Mrc(a, i, j).re = 1.1;
             Mrc(a, i, j).im = -0.1;
             Mrc(b, i, j).re = 1.2;
-            Mrc(a, i, j).im = 1.00;
-            Mrc(ans, i, j).re = 2.64;
-            Mrc(ans, i, j).im = 2.40;
+            Mrc(b, i, j).im = 1.00;
+            Mrc(ans, i, j).re = 2.84;
+            Mrc(ans, i, j).im = 1.96;
         }
     }
     puts ("1st matrix: \n");
-    printMatrixc(&a);
+    printMatrix(&a);
     puts ("2nd matrix: \n");
-    printMatrixc(&b);
+    printMatrix(&b);
     puts ("Multiplication: \n");
-    Matrixc r = multiplyc(&a, &b);
-    printMatrixc(&r);
+    Matrix r = multiply(&a, &b);
+    printMatrix(&r);
     for (i=0; i<2; i++){
         for (j=0; j<2; j++){
-            if (Mrc(ans, i, j).re != Mrc(r, i, j).re || Mrc(ans, i, j).im != Mrc(r, i, j).im) return 0;
+            if (Mrc(ans, i, j).re != Mrc(r, i, j).re && Mrc(ans, i, j).im != Mrc(r, i, j).im) return 0;
         }
     }
     return 1;
