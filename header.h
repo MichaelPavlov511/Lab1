@@ -67,14 +67,14 @@ Matrix createMatrix(int r, int c, int f){
     int vtf;
     if (f == 1) vtf = sizeof(float);
     else vtf = sizeof(complex);
-    Matrix temp = {r, c, calloc(r, sizeof(void*))};
+    Matrix temp = {r, c, calloc(r+1, sizeof(void*))};
     temp.flag = f;
     if (temp.matrix == NULL) {
         err();
     }
 
     for (int i = 0; i < r; i++) {
-        temp.matrix[i] = calloc(c, sizeof vtf);
+        temp.matrix[i] = calloc(c+1, sizeof vtf);
 
         if (temp.matrix[i] == NULL) {
             err();
